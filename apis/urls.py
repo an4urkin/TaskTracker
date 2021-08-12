@@ -1,16 +1,19 @@
 from django.urls import path
-
-from .views import TaskTrackViewSet #ListTaskTrack, DetailTaskTrack     Obsolete: replaced by viewset
+from .import views
 from rest_framework.routers import DefaultRouter
 
 
-router = DefaultRouter()
-router.register('', TaskTrackViewSet, basename='tasktracks')
-urlpatterns = router.urls
-
-#Obsolete: replaced by viewset
+# Replaced by separate URLs, may be changed later
 #
-# [
-    # path('', ListTaskTrack.as_view()),
-    # path('<int:pk>/', DetailTaskTrack.as_view()),
-# ]
+# router = DefaultRouter()
+# router.register('', TaskTrackViewSet, basename='tasktracks')
+
+
+urlpatterns = [
+    path('', views.taskList, name="tasks"),
+    path('detail/<int:pk>/', views.taskDetail, name="detail"),
+    path('create', views.taskCreate, name="create"),
+    path('update/<int:pk>/', views.taskUpdate, name="update"),
+    path('delete/<int:pk>/', views.taskDelete, name="delete"),
+]
+# router.urls      Replaced by separate URLs, may be changed later
