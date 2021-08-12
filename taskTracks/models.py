@@ -18,9 +18,9 @@ class TaskTrack(models.Model):
         BLOCKING = 'block', _('Blocking')
     
     
-    title = models.CharField(max_length=200)
+    name = models.CharField(max_length=200)
     description = models.TextField()
-    deadline = models.DateField(_('deadline'), null=True, blank=True)
+    date = models.DateField(_('date'), null=True, blank=True)
     state = models.CharField(
         max_length=5,
         choices=Statuses.choices,
@@ -35,4 +35,4 @@ class TaskTrack(models.Model):
         
 
     def __str__(self):
-        return self.title
+        return self.name

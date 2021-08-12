@@ -7,9 +7,9 @@ class TaskTrackSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'id',
-            'title',
+            'name',
             'description',
-            'deadline',
+            'date',
             'state',
             'priority',
         )
