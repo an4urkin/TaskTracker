@@ -9,5 +9,8 @@ class TaskTrackSerializer(serializers.ModelSerializer):
             'id',
             'title',
             'description',
+            'deadline',
+            'state',
+            'priority',
         )
         model = models.TaskTrack
