@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class TaskTrack(models.Model):
     
-    class Statuses(models.TextChoices):
+    class States(models.TextChoices):
         TODO = 'todo', _('ToDo')
         READY = 'ready', _('Ready')
         INPROGRESS = 'in_pr', _('In Progress')
@@ -20,11 +20,11 @@ class TaskTrack(models.Model):
     
     name = models.CharField(max_length=200)
     description = models.TextField()
-    date = models.DateField(_('date'), null=True, blank=True)
+    date = models.DateField(_('date'), null=True, blank=True, editable=False)
     state = models.CharField(
         max_length=5,
-        choices=Statuses.choices,
-        default=Statuses.TODO,
+        choices=States.choices,
+        default=States.TODO,
     )
     priority = models.CharField(
         max_length=5,
@@ -32,7 +32,6 @@ class TaskTrack(models.Model):
         default=Priorities.MEDIUM,
     )
     
-        
-
+    
     def __str__(self):
         return self.name
