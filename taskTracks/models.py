@@ -20,7 +20,7 @@ class TaskTrack(models.Model):
     
     name = models.CharField(max_length=200)
     description = models.TextField()
-    date = models.DateField(_('date'), null=True, blank=True, editable=True)
+    date = models.DateTimeField(null=True, blank=True)
     state = models.CharField(
         max_length=5,
         choices=States.choices,
