@@ -42,12 +42,32 @@ INSTALLED_APPS = [
     'taskTracks',
     'rest_framework',
     'apis',
+    'django_filters',
+    'django_apscheduler',
+    'rest_framework_jwt',
+    'rest_framework_jwt.blacklist',
 ]
+
+# Config for scheduler
+
+# SCHEDULER_CONFIG = {
+    # "apscheduler.jobstores.default": {
+        # "class": "django_apscheduler.jobstores:DjangoJobStore"
+    # },
+    # 'apscheduler.executors.processpool': {
+        # "type": "threadpool"
+    # },
+# }
+# SCHEDULER_AUTOSTART = True
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
-    ]
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication'
+    ],
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
 MIDDLEWARE = [
