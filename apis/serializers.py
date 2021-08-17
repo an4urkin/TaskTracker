@@ -13,6 +13,7 @@ class UpdateTaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.TaskTrack
         fields = ['description', 'state']
+        read_only_fields = ['name', 'date', 'priority']
 
     def get_validation_exclusions(self):
         exclusions = super(UpdateTaskSerializer, self).get_validation_exclusions()

@@ -43,22 +43,28 @@ INSTALLED_APPS = [
     'rest_framework',
     'apis',
     'django_filters',
-    'django_apscheduler',
-    'rest_framework_jwt',
-    'rest_framework_jwt.blacklist',
+    'django_celery_beat',
 ]
 
 # Config for scheduler
 
-# SCHEDULER_CONFIG = {
-    # "apscheduler.jobstores.default": {
-        # "class": "django_apscheduler.jobstores:DjangoJobStore"
-    # },
-    # 'apscheduler.executors.processpool': {
-        # "type": "threadpool"
-    # },
-# }
-# SCHEDULER_AUTOSTART = True
+CELERY_ACCEPT_CONTENT = ['application/json']
+
+CELERY_RESULT_SERIALIZER = 'json'
+
+CELERY_TASK_SERIALIZER = 'json'
+
+CELERY_BEAT_SCHEDULE = {
+
+      #   'task-first': {
+      #   'task': 'app.tasks.one',
+      #   'schedule': timedelta(seconds=1)
+      #  },
+      # 'task-second': {
+      #   'task': 'app.tasks.two',
+      #   'schedule': crontab(minute=0, hour='*/3,10-19')
+      # }
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
