@@ -14,11 +14,10 @@ class TaskTrackViewSet(viewsets.ModelViewSet):
         'create': srlz.CreateTaskSerializer
     }
     filter_backends = [filters.OrderingFilter]
-    ordering_fields = ['id','priority','state','date']
-
+    ordering_fields = ['id', 'priority', 'state', 'date']
 
     def get_serializer_class(self):
-       try:
-           return self.serializer_action_classes[self.action]
-       except (KeyError, AttributeError):
-           return super().get_serializer_class()
+        try:
+            return self.serializer_action_classes[self.action]
+        except (KeyError, AttributeError):
+            return super().get_serializer_class()
