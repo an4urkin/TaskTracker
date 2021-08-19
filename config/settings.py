@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'apis',
     'django_filters',
-    'django_celery_beat',
+    'django_celery_results',
+    # 'django_celery_beat',
 ]
 
 REST_FRAMEWORK = {
@@ -137,9 +138,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Celery settings
 
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+CELERY_BROKER_URL = 'amqp://localhost'  # 'redis://127.0.0.1:6379' -> for redis message broker
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = "UTC"
 
+CELERY_RESULT_BACKEND = 'django-db'
