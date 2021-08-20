@@ -26,4 +26,4 @@ class CreateTaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.TaskTrack
-        fields = ['id', 'name', 'description', 'date', 'state', 'priority']
+        fields = ['name', 'description', 'date', 'state', 'priority']

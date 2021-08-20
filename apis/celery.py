@@ -12,11 +12,4 @@ app.conf.update(timezone='Europe/Kiev')
 
 app.config_from_object(settings, namespace='CELERY')
 
-# Celery Beat settings - will add later
-
 app.autodiscover_tasks()
-
-
-@app.task(bind=True)
-def test_task(self):
-    print(f'Request: {self.Request!r}')

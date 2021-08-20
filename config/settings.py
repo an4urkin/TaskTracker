@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from celery.schedules import crontab
+
+import apis.tasks
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,7 +46,7 @@ INSTALLED_APPS = [
     'apis',
     'django_filters',
     'django_celery_results',
-    # 'django_celery_beat',
+    'django_celery_beat',
 ]
 
 REST_FRAMEWORK = {
@@ -143,5 +147,10 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = "UTC"
-
 CELERY_RESULT_BACKEND = 'django-db'
+CELERY_BEAT_SCHEDULE = {
+    "delete_rejected_tasks": {
+        "task": "apis.tasks.delete_rejected_tasks",
+        "schedule": crontab(minute="*/1"),
+    },
+}

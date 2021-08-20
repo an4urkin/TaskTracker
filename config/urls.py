@@ -15,10 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from apis import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('apis/v1/tasks/', include('apis.urls')),
-    path('', views.test_view, name="test_view")
 ]

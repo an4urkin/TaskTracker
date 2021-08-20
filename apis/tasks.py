@@ -1,25 +1,27 @@
 from datetime import datetime, timedelta
-
-from celery.schedules import crontab
-from celery import shared_task
 from django.utils import timezone
-from taskTracks import models
+
+from celery import shared_task
+from celery.utils.log import get_task_logger
+# from taskTracks import models
 
 
-@shared_task(bind=True)
-def test_func(self):
-    for item in range(10):
-        print(item)
-    return "OK"
+logger = get_task_logger(__name__)
+
+
+# @shared_task
+# def sample_task():
+#     logger.info("The sample task just ran.")
 
 
 # Delete rejected tasks
 
-# @periodic_task(run_every=crontab(minute='*/5'))
-# def delete_rejected_tasks():
-#     query = models.TaskTrack.objects.all()
-#     for task in query:
-#         expiration_date = task.date + timedelta(days=2)
-#         if expiration_date < timezone.now() and task.state == 'to_do':
-#             task.delete()
-#     return "Deleted rejected tasks at {}".format(timezone.now())
+@shared_task
+def delete_rejected_tasks():
+    from taskTracks import models
+    rejects = models.TaskTrack.objects.all()
+    for task in rejects:
+        expiration_date = task.date + timedelta(days=2)
+        if expiration_date < timezone.now() and task.state == 'to_do':
+            task.delete()
+    logger.info("Deleted rejected tasks at {}".format(timezone.now()))

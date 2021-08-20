@@ -5,12 +5,6 @@ from django.shortcuts import render
 from rest_framework import viewsets, filters, generics
 from taskTracks import models
 from apis import serializers as ser
-from .tasks import test_func
-
-
-def test_view(request):
-    test_func.delay()
-    return HttpResponse("OK")
 
 
 class TaskTrackViewSet(viewsets.ModelViewSet):
