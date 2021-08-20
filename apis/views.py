@@ -1,7 +1,3 @@
-import datetime
-from django.http import HttpResponse
-from django.utils import timezone
-from django.shortcuts import render
 from rest_framework import viewsets, filters, generics
 from taskTracks import models
 from apis import serializers as ser

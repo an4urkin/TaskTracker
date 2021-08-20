@@ -151,6 +151,6 @@ CELERY_RESULT_BACKEND = 'django-db'
 CELERY_BEAT_SCHEDULE = {
     "delete_rejected_tasks": {
         "task": "apis.tasks.delete_rejected_tasks",
-        "schedule": crontab(minute="*/1"),
+        "schedule": crontab(minute=0, hour='*/3'),
     },
 }
