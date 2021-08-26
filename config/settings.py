@@ -15,7 +15,6 @@ from celery.schedules import crontab
 import os
 import apis.tasks
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -142,7 +141,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Celery settings
 
-CELERY_BROKER_URL = 'amqp://localhost'  # 'redis://127.0.0.1:6379' -> for redis message broker
+CELERY_BROKER_URL = 'amqp://localhost'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
@@ -162,7 +161,10 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'console': {
-            'format': '%(asctime)s %(name)s %(levelname)s %(module)s %(message)s'
+            'format': '%(asctime)s - %(module)s - %(levelname)s - %(message)s'
+        },
+        'standard': {
+            'format': '%(levelname) [%(asctime)s]: %(message)s'
         }
     },
     'handlers': {
@@ -170,6 +172,14 @@ LOGGING = {
             'level': 'INFO',
             'class': 'rich.logging.RichHandler',
             'formatter': 'console'
+        },
+        # BROKEN - requires fix
+        'rabbit': {
+            'level': 'DEBUG',
+            'class': 'python_logging_rabbitmq.RabbitMQHandler',
+            'host': 'localhost',
+            'exchange': 'logs',
+            'formatter': 'standard'
         }
     },
     'loggers': {
@@ -178,19 +188,9 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
-        'django.request': {
-            'handlers': ['console'],
-            'level': 'INFO',
-            'propagate': False,
-        },
         'django.server': {
             'handlers': ['console'],
-            'level': 'WARNING',
-            'propagate': False,
-        },
-        'django.db.backends': {
-            'handlers': ['console'],
-            'level': 'WARNING',
+            'level': 'INFO',
             'propagate': False,
         }
     }
