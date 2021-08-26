@@ -14,13 +14,12 @@ class UpdateTaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.TaskTrack
         fields = ['description', 'state']
-        # read_only_fields = ['name', 'date', 'priority']
 
 
 class CreateTaskSerializer(serializers.ModelSerializer):
     name = serializers.CharField(required=True)
     description = serializers.CharField(required=True)
-    date = serializers.CharField(required=True)
+    date = serializers.DateTimeField(required=True)
     state = serializers.ChoiceField(choices=models.TaskTrack.States, required=True)
     priority = serializers.ChoiceField(choices=models.TaskTrack.Priorities, required=True)
 

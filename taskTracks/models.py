@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+import datetime
 
 
 class TaskTrack(models.Model):
@@ -17,7 +18,7 @@ class TaskTrack(models.Model):
 
     name = models.CharField(max_length=200)
     description = models.TextField()
-    date = models.DateTimeField(null=True, blank=True)
+    date = models.DateTimeField(default=datetime.datetime.now())
     state = models.CharField(
         max_length=10,
         choices=States.choices,
