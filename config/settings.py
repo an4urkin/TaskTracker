@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-=454iw87(la!so2826!wv4eyq&gq*s$mppg(x6-d713oi6zyxb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -145,12 +145,12 @@ CELERY_BROKER_URL = 'amqp://localhost'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
-CELERY_TIMEZONE = "UTC"
-CELERY_RESULT_BACKEND = 'django-db'
+CELERY_TIMEZONE = "Europe/Kiev"
+CELERY_RESULT_BACKEND = 'django-db'  # 'db+sqlite:///results.sqlite'  #
 CELERY_BEAT_SCHEDULE = {
     "delete_rejected_tasks": {
         "task": "apis.tasks.delete_rejected_tasks",
-        "schedule": crontab(minute=0, hour='*/3'),
+        "schedule": crontab(minute='*/3'),
     },
 }
 
