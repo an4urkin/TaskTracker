@@ -8,21 +8,14 @@ class ListTaskSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class UpdateTaskSerializer(serializers.ModelSerializer):
+class UpdateTaskSerializer(serializers.Serializer):
+    description = serializers.CharField(required=True)
     state = serializers.ChoiceField(choices=models.TaskTrack.States, required=True)
 
-    class Meta:
-        model = models.TaskTrack
-        fields = ['description', 'state']
 
-
-class CreateTaskSerializer(serializers.ModelSerializer):
+class CreateTaskSerializer(serializers.Serializer):
     name = serializers.CharField(required=True)
     description = serializers.CharField(required=True)
     date = serializers.DateTimeField(required=True)
     state = serializers.ChoiceField(choices=models.TaskTrack.States, required=True)
     priority = serializers.ChoiceField(choices=models.TaskTrack.Priorities, required=True)
-
-    class Meta:
-        model = models.TaskTrack
-        fields = ['name', 'description', 'date', 'state', 'priority']

@@ -7,7 +7,7 @@ class ApisConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'apis'
 
-    def ready(self):
-        post_init.connect(notify_task_created)
-        post_save.connect(notify_task_updated)
-        post_delete.connect(notify_task_deleted)
+    # def ready(self):
+    #     post_init.connect(notify_task_created)
+    #     post_save.connect(notify_task_updated)
+    #     post_delete.connect(notify_task_deleted)

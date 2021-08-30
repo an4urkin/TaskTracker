@@ -141,12 +141,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Celery settings
 
-CELERY_BROKER_URL = 'amqp://localhost'
+CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq:5672'  # 'amqp://localhost'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = "Europe/Kiev"
-CELERY_RESULT_BACKEND = 'django-db'  # 'db+sqlite:///results.sqlite'  #
+CELERY_RESULT_BACKEND = 'django-db'  # 'db+sqlite:///results.sqlite'
 CELERY_BEAT_SCHEDULE = {
     "delete_rejected_tasks": {
         "task": "apis.tasks.delete_rejected_tasks",

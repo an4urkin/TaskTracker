@@ -9,3 +9,26 @@ services:
       - .:/task_Track
     ports:
       - "8000:8000"
+    depends_on:
+      - rabbitmq
+  rabbitmq:
+    image: rabbitmq:3.9.3
+    container_name: 'rabbitmq'
+    volumes:
+      - .:/task_Track
+    ports:
+      - "5672:5672"
+  celery:
+    build: .
+    command: celery -A apis worker -l info
+    volumes:
+      - .:/task_Track
+    depends_on:
+      - rabbitmq
+  celery-beat:
+    build: .
+    command: celery -A apis beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - .:/task_Track
+    depends_on:
+      - rabbitmq
