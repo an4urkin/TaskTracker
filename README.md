@@ -4,7 +4,7 @@
 - Task description can be updated.
 - Task state can be changed with any of (TODO, READY, IN PROGRESS, COMPLETED).
 - Task can be automatically rejected (deleted) if it's not started in configurable amount of time.
-- Tasks can be sorted by all applicable fields.
+- Tasks can be sorted by all applicable fields (id, priority, state, date).
 
 ### Requirements
 
