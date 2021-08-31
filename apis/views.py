@@ -1,4 +1,4 @@
-from rest_framework import viewsets, filters, generics
+from rest_framework import viewsets, filters
 from taskTracks import models
 from apis import serializers as ser
 
