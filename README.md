@@ -1,4 +1,4 @@
-### TaskTracker is a task management web app written with Django REST.
+## TaskTracker is a task management web app written with Django REST
 
 - Allows to define a task with name, description, creation date, state and priority.
 - Task description can be updated.
@@ -47,4 +47,4 @@ celery -A apis beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseSc
 ```
 ### Access the app
 
-You can acess Browsable API via http://127.0.0.1:8000/apis/v1/tasks
+You can acess Browsable API via http://127.0.0.1:8000/apis/v1/tasks/
