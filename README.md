@@ -12,6 +12,7 @@
 - Django 3.2.6 and other dependencies from the `requirements.txt`
 
 ### Install&Run
+- Install and start RabbitMQ service
 - Clone repo
 - Run virtual environment:
 ```
@@ -36,7 +37,7 @@ python3 manage.py createsuperuser
 python3 manage.py runserver
 ```
 ### For scheduled rejection of tasks:
-- Install and start RabbitMQ service
+- Start RabbitMQ service
 - Run celery worker in separate command prompt (Windows):
 ```
 celery -A apis worker -l info -P gevent
