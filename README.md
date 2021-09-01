@@ -36,7 +36,7 @@ python3 manage.py createsuperuser
 ```
 python3 manage.py runserver
 ```
-### For scheduled rejection of tasks:
+### For scheduled rejection of tasks
 - Start RabbitMQ service
 - Run celery worker in separate command prompt (Windows):
 ```
