@@ -12,6 +12,7 @@
 - Django 3.2.6 and other dependencies from the `requirements.txt`
 
 ### Install&Run
+- [Install](https://www.rabbitmq.com/download.html) and start RabbitMQ service
 - Clone repo
 - Run virtual environment:
 ```
@@ -35,8 +36,8 @@ python3 manage.py createsuperuser
 ```
 python3 manage.py runserver
 ```
-### For scheduled rejection of tasks:
-- Install and start RabbitMQ service
+### For scheduled rejection of tasks
+- Start RabbitMQ service
 - Run celery worker in separate command prompt (Windows):
 ```
 celery -A apis worker -l info -P gevent
@@ -47,4 +48,4 @@ celery -A apis beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseSc
 ```
 ### Access the app
 
-You can acess Browsable API via http://127.0.0.1:8000/apis/v1/tasks/
+You can access Browsable API via http://127.0.0.1:8000/apis/v1/tasks/
