@@ -18,7 +18,7 @@ class TaskTrack(models.Model):
 
     name = models.CharField(max_length=200)
     description = models.TextField()
-    date = models.DateTimeField(default=timezone.now)
+    date = models.DateTimeField(auto_now_add=True)
     state = models.CharField(
         max_length=10,
         choices=States.choices,

@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from taskTracks import models
 from rest_framework.exceptions import ValidationError
+from datetime import datetime
+from django.utils import timezone
 import pika
 
 
@@ -52,7 +54,7 @@ class UpdateTaskSerializer(serializers.ModelSerializer):
 class CreateTaskSerializer(serializers.ModelSerializer):
     name = serializers.CharField(required=True)
     description = serializers.CharField(required=True)
-    date = serializers.DateTimeField(required=True)
+    # date = serializers.DateTimeField()
     state = serializers.ChoiceField(choices=models.TaskTrack.States, required=True)
     priority = serializers.ChoiceField(choices=models.TaskTrack.Priorities, required=True)
 
