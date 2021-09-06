@@ -14,7 +14,7 @@
 ### Install&Run
 - [Install](https://www.rabbitmq.com/download.html) and start RabbitMQ service
 - Clone repo
-- Run virtual environment:
+- Launch virtual environment:
 ```
 pip install --user pipenv
 pipenv shell
@@ -49,3 +49,14 @@ celery -A apis beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseSc
 ### Access the app
 
 You can access Browsable API via http://127.0.0.1:8000/apis/v1/tasks/
+
+### Run tests
+
+- Launch virtual environment:
+```
+pipenv shell
+```
+- Run tests:
+```
+python3 manage.py test --settings=config.settings
+```
