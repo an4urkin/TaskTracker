@@ -36,6 +36,10 @@ python3 manage.py createsuperuser
 ```
 python3 manage.py runserver
 ```
+### Access the app
+
+You can access Browsable API via http://127.0.0.1:8000/apis/v1/tasks/
+
 ### For scheduled rejection of tasks
 - Start RabbitMQ service
 - Run celery worker in separate command prompt (Windows):
@@ -46,10 +50,16 @@ celery -A apis worker -l info -P gevent
 ```
 celery -A apis beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
 ```
-### Access the app
-
-You can access Browsable API via http://127.0.0.1:8000/apis/v1/tasks/
-
+### Get notifications
+- Start RabbitMQ service
+- Launch virtual environment in separate command prompt:
+```
+pipenv shell
+```
+- Run listener:
+```
+python3 recieve_notification.py
+```
 ### Run tests
 
 - Launch virtual environment:
