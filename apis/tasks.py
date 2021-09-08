@@ -19,15 +19,3 @@ def delete_rejected_tasks():
         if expiration_date < timezone.now() and task.state == 'to_do':
             task.delete()
     logger.info("Deleted rejected tasks at {}".format(timezone.now()))
-
-
-def notify_task_created(sender, **kwargs):
-    print('Created successfully!')
-
-
-def notify_task_updated(sender, **kwargs):
-    print('Updated successfully!')
-
-
-def notify_task_deleted(sender, **kwargs):
-    print('Deleted successfully!')
