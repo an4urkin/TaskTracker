@@ -1,11 +1,10 @@
 from rest_framework import serializers
 from taskTracks import models
 from rest_framework.exceptions import ValidationError
-from datetime import datetime
-from django.utils import timezone
 import pika
 
 
+#  BROKEN - doesnt work with Celery Scheduler
 def emit_notification(message):
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
     channel = connection.channel()
@@ -15,7 +14,7 @@ def emit_notification(message):
         routing_key='',
         body=message
     )
-    # print(" [x] Sent %r" % message)
+    print(" [x] Sent %r" % message)
     connection.close()
 
 
@@ -29,7 +28,7 @@ class DeleteTaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.TaskTrack
         fields = '__all__'
-        emit_notification("Task deleted!")
+        # emit_notification("Task deleted!")
 
 
 class UpdateTaskSerializer(serializers.ModelSerializer):
@@ -42,7 +41,7 @@ class UpdateTaskSerializer(serializers.ModelSerializer):
     def is_valid(self, raise_exception=False):
         valid = super(UpdateTaskSerializer, self).is_valid()
         if valid:
-            emit_notification("Task updated!")
+            # emit_notification("Task updated!")
             return True
         else:
             if self._errors:
@@ -66,7 +65,7 @@ class CreateTaskSerializer(serializers.ModelSerializer):
     def is_valid(self, raise_exception=False):
         valid = super(CreateTaskSerializer, self).is_valid()
         if valid:
-            emit_notification("Task created!")
+            # emit_notification("Task created!")
             return True
         else:
             return False
