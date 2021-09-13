@@ -12,12 +12,13 @@ services:
     depends_on:
       - rabbitmq
   rabbitmq:
-    image: rabbitmq:3.9.3
+    image: rabbitmq:3-management
     container_name: 'rabbitmq'
     volumes:
       - .:/task_Track
     ports:
       - "5672:5672"
+      - "15672:15672"
   celery:
     build: .
     command: celery -A apis worker -l info
