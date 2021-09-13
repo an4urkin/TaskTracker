@@ -173,28 +173,33 @@ LOGGING = {
             'class': 'rich.logging.RichHandler',
             'formatter': 'console'
         },
-        # BROKEN - requires fix
-        'rabbit': {
+        'file': {
             'level': 'DEBUG',
-            'class': 'python_logging_rabbitmq.RabbitMQHandler',
-            'host': 'localhost',
-            'exchange': 'logs',
-            'formatter': 'standard'
-        }
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log'
+        },
+        # BROKEN - requires fix
+        # 'rabbit': {
+        #     'level': 'DEBUG',
+        #     'class': 'python_logging_rabbitmq.RabbitMQHandlerOneWay',
+        #     'host': 'localhost',
+        #     'exchange': 'logs',
+        #     'formatter': 'console'
+        # }
     },
     'loggers': {
         'django': {
-            'handlers': ['console'],
+            'handlers': ['console','file'],
             'level': 'INFO',
             'propagate': True,
         },
         'django.server': {
-            'handlers': ['console'],
+            'handlers': ['console','file'],
             'level': 'INFO',
             'propagate': False,
         },
         'django.db.backends': {
-            'handlers': ['console'],
+            'handlers': ['console','file'],
             'level': 'DEBUG',
             'propagate': False,
         }
