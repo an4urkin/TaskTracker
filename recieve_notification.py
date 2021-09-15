@@ -1,6 +1,8 @@
 import pika
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+# for local ->'amqp://guest:guest@localhost:5672/%2F' // for docker -> 'amqp://guest:guest@rabbitmq:5672'
+params = pika.URLParameters('amqp://guest:guest@localhost:5672/%2F') 
+connection = pika.BlockingConnection(params)  # pika.ConnectionParameters(host='localhost')
 channel = connection.channel()
 channel.exchange_declare(exchange='logs', exchange_type='fanout')
 result = channel.queue_declare(queue='', exclusive=True)
