@@ -5,22 +5,23 @@ from taskTracks.models import TaskTrack
 from apis.tests.factory import TaskTrackFactory
 
 
-class SnippetViewsTest(APITestCase):
+class ViewsTest(APITestCase):
     def test_list_all_tasks(self):
+        print("\nTesting GET for all.")
+
         tasks = TaskTrackFactory.create_batch(random.randint(1, 5))
 
         response = self.client.get(reverse('apis:tasktracks-list'))
 
-        print("\nTesting GET for all.")
         self.assertEquals(200, response.status_code)
         self.assertEquals(len(tasks), len(response.data))
 
     def test_view_specific_task(self):
+        print("\nTesting GET for specific.")
+        
         tasks = TaskTrackFactory()
 
         response = self.client.get(reverse('apis:tasktracks-detail', args=[tasks.id]))
-
-        print("\nTesting GET for specific.")
 
         self.assertEquals(200, response.status_code)
         self.assertEquals(tasks.name, response.data['name'])
@@ -30,6 +31,8 @@ class SnippetViewsTest(APITestCase):
         self.assertEquals(str(tasks.priority), response.data['priority'])
 
     def test_update_specific_task(self):
+        print("\nTesting PUT.")
+
         tasks = TaskTrackFactory(
             description='Blah blah blah',
             state='to_do',
@@ -39,8 +42,6 @@ class SnippetViewsTest(APITestCase):
             'description': 'Blah blah blah, Updated',
             'state': 'in_pr',
         }
-
-        print("\nTesting PUT.")
 
         response = self.client.put(reverse('apis:tasktracks-detail', args=[tasks.id]), payload)
         tasks.refresh_from_db()
@@ -53,6 +54,8 @@ class SnippetViewsTest(APITestCase):
         self.assertEquals(tasks.state, payload['state'])
 
     def test_add_a_new_task(self):
+        print("\nTesting POST.")
+
         payload = {
             'name': 'TestingCreateTask',
             'description': 'Kekekek',
@@ -61,9 +64,7 @@ class SnippetViewsTest(APITestCase):
         }
 
         response = self.client.post(reverse('apis:tasktracks-list'), payload)
-        task = TaskTrack.objects.first()
-
-        print("\nTesting POST.")
+        task = TaskTrack.objects.first()        
 
         self.assertEquals(201, response.status_code)
         self.assertEquals(response.data['name'], payload['name'])
@@ -77,9 +78,9 @@ class SnippetViewsTest(APITestCase):
         self.assertEquals(task.priority, payload['priority'])
 
     def test_remove_task(self):
-        tasks = TaskTrackFactory()
-
         print("\nTesting DELETE.")
+        
+        tasks = TaskTrackFactory()
 
         response = self.client.delete(reverse('apis:tasktracks-detail', args=[tasks.id]))
 
