@@ -11,6 +11,13 @@ services:
       - "8000:8000"
     depends_on:
       - rabbitmq
+  listener:
+    build: .
+    command: python recieve_notification.py
+    volumes:
+      - .:/task_Track
+    depends_on:
+      - rabbitmq
   rabbitmq:
     image: rabbitmq:3-management
     container_name: 'rabbitmq'

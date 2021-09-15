@@ -121,7 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Kiev'
 
 USE_I18N = True
 
@@ -141,7 +141,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Celery settings
 
-CELERY_BROKER_URL = 'amqp://localhost'  # for docker -> 'amqp://guest:guest@rabbitmq:5672'
+# for local ->'amqp://guest:guest@localhost:5672/%2F' // for docker -> 'amqp://guest:guest@rabbitmq:5672'
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672/%2F' 
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
