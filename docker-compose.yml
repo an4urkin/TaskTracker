@@ -13,7 +13,7 @@ services:
       - rabbitmq
   listener:
     build: .
-    command: python recieve_notification.py
+    command: bash -c "python recieve_notification.py"
     volumes:
       - .:/task_Track
     depends_on:
