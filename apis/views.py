@@ -10,8 +10,8 @@ from taskTracks.models import TaskTrack
 
 def emit_notification(message):
     # for local ->'amqp://guest:guest@localhost:5672/%2F' // for docker -> 'amqp://guest:guest@rabbitmq:5672'
-    params = pika.URLParameters('amqp://guest:guest@localhost:5672/%2F')
-    connection = pika.BlockingConnection(params)  # pika.ConnectionParameters(host='localhost')
+    # params = pika.URLParameters('amqp://guest:guest@localhost:5672/%2F')
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port=5672))  # pika.ConnectionParameters(host='localhost')
     channel = connection.channel()
     channel.exchange_declare(exchange='logs', exchange_type='fanout')
     channel.basic_publish(
@@ -34,7 +34,10 @@ class TaskTrackViewSet(viewsets.ModelViewSet):
     def create(self, request):
         serializer = ser.ListTaskSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            emit_notification("Task Created!")
+            try:
+                emit_notification("Task Created!")
+            except:
+                pass
         self.perform_create(serializer)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
@@ -43,7 +46,10 @@ class TaskTrackViewSet(viewsets.ModelViewSet):
         task = get_object_or_404(queryset, pk=pk)
         serializer = ser.UpdateTaskSerializer(task, data=request.data)
         if serializer.is_valid(raise_exception=True):
-            emit_notification("Task Updated!")
+            try:
+                emit_notification("Task Updated!")
+            except:
+                pass
         self.perform_update(serializer)
         return Response(serializer.data)
     
@@ -51,7 +57,10 @@ class TaskTrackViewSet(viewsets.ModelViewSet):
         queryset = TaskTrack.objects.all()
         task = get_object_or_404(queryset, pk=pk)
         self.perform_destroy(task)
-        emit_notification("Task Deleted!")
+        try:
+            emit_notification("Task Deleted!")
+        except:
+            pass
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     
@@ -60,8 +69,7 @@ class TaskTrackViewSet(viewsets.ModelViewSet):
     serializer_action_classes = {
         # 'retrieve': ser.ListTaskSerializer,
         'update': ser.UpdateTaskSerializer,
-        # 'create': ser.CreateTaskSerializer,
-        # 'destroy': ser.DeleteTaskSerializer
+        # 'create': ser.CreateTaskSerializer
     }
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['id', 'priority', 'state', 'date']
