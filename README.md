@@ -1,5 +1,7 @@
 ## TaskTracker is a task management web app written with Django REST
 
+![This is an image](https://github.com/an4urkin/TaskTracker/blob/master/my_project_visualized_all.png)
+
 - Allows to define a task with name, description, creation date, state and priority.
 - Task description can be updated.
 - Task state can be changed with any of (TODO, READY, IN PROGRESS, COMPLETED).
