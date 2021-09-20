@@ -1,10 +1,8 @@
 import pika
 
-# connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port=5672))
-
 cred = pika.PlainCredentials('guest', 'guest')
 params = pika.ConnectionParameters(
-    host='rabbitmq',
+    host='rabbitmq', # for local -> 'localhost' || for docker -> 'rabbitmq'
     port=5672,
     virtual_host='/',
     credentials=cred
