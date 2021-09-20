@@ -9,8 +9,10 @@ services:
       - .:/task_Track
     ports:
       - "8000:8000"
+    environment:
+      RABBITMQ_SERVER: rabbitmq
     depends_on:
-      - rabbitmq
+      - rabbitmq  
   listener:
     build: .
     command: bash -c "python recieve_notification.py"

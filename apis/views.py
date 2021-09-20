@@ -10,7 +10,16 @@ from taskTracks.models import TaskTrack
 
 def emit_notification(message):
 
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port=5672))
+    # connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port=5672))
+
+    cred = pika.PlainCredentials('guest', 'guest')
+    params = pika.ConnectionParameters(
+        host='rabbitmq',
+        port=5672,
+        virtual_host='/',
+        credentials=cred
+    )
+    connection = pika.BlockingConnection(params)
     channel = connection.channel()
     channel.exchange_declare(exchange='logs', exchange_type='fanout')
     channel.basic_publish(
