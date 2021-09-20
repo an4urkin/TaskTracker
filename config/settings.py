@@ -40,12 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Local
-    'taskTracks',
-    'rest_framework',
     'apis',
+    'taskTracks',
+    'django_extensions',
     'django_filters',
     'django_celery_results',
     'django_celery_beat',
+    'rest_framework',
 ]
 
 REST_FRAMEWORK = {
