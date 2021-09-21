@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    container_name: task_Track
+    volumes:
+      - .:/task_Track
+    ports:
+      - "8000:8000"
+    environment:
+      RABBITMQ_SERVER: rabbitmq
+    depends_on:
+      - rabbitmq  
+  listener:
+    build: .
+    command: bash -c "python recieve_notification.py"
+    volumes:
+      - .:/task_Track
+    depends_on:
+      - rabbitmq
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: 'rabbitmq'
+    volumes:
+      - .:/task_Track
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  celery:
+    build: .
+    command: celery -A apis worker -l info
+    volumes:
+      - .:/task_Track
+    depends_on:
+      - rabbitmq
+  celery-beat:
+    build: .
+    command: celery -A apis beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - .:/task_Track
+    depends_on:
+      - rabbitmq

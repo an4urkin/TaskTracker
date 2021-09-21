@@ -1,0 +1,74 @@
+## TaskTracker is a task management web app written with Django REST
+
+![This is an image](https://github.com/an4urkin/TaskTracker/blob/master/my_project_visualized_all.png)
+
+- Allows to define a task with name, description, creation date, state and priority.
+- Task description can be updated.
+- Task state can be changed with any of (TODO, READY, IN PROGRESS, COMPLETED).
+- Task can be automatically rejected (deleted) if it's not started in configurable amount of time.
+- Tasks can be sorted by all applicable fields (id, priority, state, date).
+
+### Requirements
+
+- Python 3.9.6
+- Django 3.2.6 and other dependencies from the `requirements.txt`
+
+### Install&Run
+- [Install](https://www.rabbitmq.com/download.html) and start RabbitMQ service
+- Clone repo
+- Launch virtual environment:
+```
+pip install --user pipenv
+pipenv shell
+```
+- Install dependencies:
+```
+pip install -r requirements.txt
+```
+- Create database:
+```
+python3 manage.py makemigrations
+python3 manage.py migrate
+```
+- Create admin:
+```
+python3 manage.py createsuperuser
+```
+- Run:
+```
+python3 manage.py runserver
+```
+### Access the app
+
+You can access Browsable API via http://127.0.0.1:8000/apis/v1/tasks/
+
+### For scheduled rejection of tasks
+- Start RabbitMQ service
+- Run celery worker in separate command prompt (Windows):
+```
+celery -A apis worker -l info -P gevent
+```
+- Run celery scheduler in another separate command prompt:
+```
+celery -A apis beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+```
+### Get notifications
+- Start RabbitMQ service
+- Launch virtual environment in separate command prompt:
+```
+pipenv shell
+```
+- Run listener:
+```
+python3 recieve_notification.py
+```
+### Run tests
+
+- Launch virtual environment:
+```
+pipenv shell
+```
+- Run tests:
+```
+python3 manage.py test --settings=config.settings
+```
