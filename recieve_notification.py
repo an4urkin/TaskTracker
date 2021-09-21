@@ -2,7 +2,7 @@ import pika
 
 cred = pika.PlainCredentials('guest', 'guest')
 params = pika.ConnectionParameters(
-    host='localhost', # for local -> 'localhost' || for docker -> 'rabbitmq'
+    host='rabbitmq', # for local -> 'localhost' || for docker -> 'rabbitmq'
     port=5672,
     virtual_host='/',
     credentials=cred

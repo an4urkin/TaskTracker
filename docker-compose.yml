@@ -1,6 +1,16 @@
 version: '3'
 
 services:
+  db:
+    image: postgres
+    volumes:
+      - .:/task_Track
+    # volumes:
+    #   - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=tasksdb
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=adminadmin
   web:
     build: .
     command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
