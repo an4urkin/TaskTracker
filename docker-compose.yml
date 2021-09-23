@@ -2,11 +2,9 @@ version: '3'
 
 services:
   db:
-    image: postgres
+    image: postgres:13.4
     volumes:
-      - .:/task_Track
-    # volumes:
-    #   - ./data/db:/var/lib/postgresql/data
+      - .:/task_TrackP
     environment:
       - POSTGRES_DB=tasksdb
       - POSTGRES_USER=admin
@@ -14,27 +12,29 @@ services:
   web:
     build: .
     command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-    container_name: task_Track
+    container_name: task_TrackP
     volumes:
-      - .:/task_Track
+      - .:/task_TrackP
     ports:
       - "8000:8000"
     environment:
       RABBITMQ_SERVER: rabbitmq
     depends_on:
-      - rabbitmq  
+      - db
+      - rabbitmq
   listener:
     build: .
     command: bash -c "python recieve_notification.py"
     volumes:
-      - .:/task_Track
+      - .:/task_TrackP
     depends_on:
+      - db
       - rabbitmq
   rabbitmq:
     image: rabbitmq:3-management
     container_name: 'rabbitmq'
     volumes:
-      - .:/task_Track
+      - .:/task_TrackP
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -42,13 +42,14 @@ services:
     build: .
     command: celery -A apis worker -l info
     volumes:
-      - .:/task_Track
+      - .:/task_TrackP
     depends_on:
       - rabbitmq
   celery-beat:
     build: .
     command: celery -A apis beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
     volumes:
-      - .:/task_Track
+      - .:/task_TrackP
     depends_on:
+      - db
       - rabbitmq

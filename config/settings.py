@@ -97,8 +97,8 @@ DATABASES = {
         'NAME': 'tasksdb',
         'USER': 'admin',
         'PASSWORD': 'adminadmin',
-        'HOST': 'localhost',
-        'PORT': '',
+        'HOST': 'db', # for local ->'localhost' || for docker -> 'db'
+        'PORT': '5432',
     }
 }
 
@@ -145,7 +145,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Celery settings
 
-#for local ->'amqp://guest:guest@localhost:5672/%2F' || for docker -> 'amqp://guest:guest@rabbitmq:5672'
+# for local ->'amqp://guest:guest@localhost:5672/%2F' || for docker -> 'amqp://guest:guest@rabbitmq:5672'
 CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq:5672/%2F' 
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
