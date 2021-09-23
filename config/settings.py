@@ -151,11 +151,11 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = "Europe/Kiev"
-CELERY_RESULT_BACKEND = 'django-db'
+CELERY_RESULT_BACKEND = 'rpc://'
 CELERY_BEAT_SCHEDULE = {
     "delete_rejected_tasks": {
         "task": "apis.tasks.delete_rejected_tasks",
-        "schedule": crontab(minute='*/1'),
+        "schedule": crontab(minute='*/2'),
     },
 }
 
