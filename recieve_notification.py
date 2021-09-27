@@ -1,6 +1,7 @@
 import pika, time
 from datetime import datetime
 
+
 cred = pika.PlainCredentials('guest', 'guest')
 params = pika.ConnectionParameters(
     host='rabbitmq', # for local -> 'localhost' || for docker -> 'rabbitmq'
@@ -8,6 +9,7 @@ params = pika.ConnectionParameters(
     virtual_host='/',
     credentials=cred
 )
+
 while True:
     try:
         connection = pika.BlockingConnection(params)
