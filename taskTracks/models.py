@@ -7,7 +7,7 @@ class TaskTrack(models.Model):
     class States(models.TextChoices):
         TODO = 'to_do', _('ToDo')
         READY = 'ready', _('Ready')
-        INPROGRESS = 'in_pr', _('In Progress')
+        INPROGRESS = 'in_pr', _('InProgress')
         COMPLETED = 'complt', _('Completed')
 
     class Priorities(models.TextChoices):
@@ -16,16 +16,14 @@ class TaskTrack(models.Model):
         HIGH = '2_high', _('High')
         BLOCKING = '3_block', _('Blocking')
 
-    name = models.CharField(max_length=200)
+    name = models.TextField()
     description = models.TextField()
-    date = models.DateTimeField(auto_now_add=True)
-    state = models.CharField(
-        max_length=10,
+    date = models.DateTimeField(default=timezone.now, editable=False)
+    state = models.TextField(
         choices=States.choices,
         default=States.TODO,
     )
-    priority = models.CharField(
-        max_length=10,
+    priority = models.TextField(
         choices=Priorities.choices,
         default=Priorities.MEDIUM,
     )

@@ -1,44 +1,77 @@
 version: '3'
 
 services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: always
+    container_name: 'rabbitmq'
+    volumes:
+      - .:/task_TrackP
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  
+  db:
+    image: postgres:13.4
+    restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=tasksdb
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=adminadmin
+  
   web:
+    restart: always
     build: .
     command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-    container_name: task_Track
+    container_name: task_TrackP
     volumes:
-      - .:/task_Track
+      - .:/task_TrackP
     ports:
       - "8000:8000"
     environment:
       RABBITMQ_SERVER: rabbitmq
     depends_on:
-      - rabbitmq  
+      - db
+      - rabbitmq
+  
   listener:
+    restart: always
     build: .
     command: bash -c "python recieve_notification.py"
     volumes:
-      - .:/task_Track
+      - .:/task_TrackP
+    environment:
+      RABBITMQ_SERVER: rabbitmq
     depends_on:
       - rabbitmq
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: 'rabbitmq'
-    volumes:
-      - .:/task_Track
-    ports:
-      - "5672:5672"
-      - "15672:15672"
+      - web
+  
   celery:
+    restart: always
     build: .
     command: celery -A apis worker -l info
     volumes:
-      - .:/task_Track
+      - .:/task_TrackP
     depends_on:
       - rabbitmq
+      - web
+  
   celery-beat:
+    restart: always
     build: .
     command: celery -A apis beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
     volumes:
-      - .:/task_Track
+      - .:/task_TrackP
+    environment:
+      - POSTGRES_DB=tasksdb
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=adminadmin
     depends_on:
+      - db
       - rabbitmq
+      - web
+  
+volumes:
+  pgdata:

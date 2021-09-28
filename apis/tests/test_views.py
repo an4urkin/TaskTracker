@@ -1,11 +1,13 @@
 import random
 from django.urls import reverse
 from rest_framework.test import APITestCase
-from taskTracks.models import TaskTrack
+from datetime import datetime, timedelta
+
 from apis.tests.factory import TaskTrackFactory
+from taskTracks.models import TaskTrack
 
 
-class ViewsTest(APITestCase):
+class views_test(APITestCase):
     def test_list_all_tasks(self):
         print("\nTesting GET for all.")
 
@@ -26,7 +28,7 @@ class ViewsTest(APITestCase):
         self.assertEquals(200, response.status_code)
         self.assertEquals(tasks.name, response.data['name'])
         self.assertEquals(tasks.description, response.data['description'])
-        self.assertEquals(tasks.date.strftime("%Y-%m-%dT%H:%M:%S.%fZ"), response.data['date'])
+        self.assertEquals((tasks.date + timedelta(hours=3)).strftime("%Y-%m-%dT%H:%M:%S.%f+03:00"), response.data['date'])
         self.assertEquals(str(tasks.state), response.data['state'])
         self.assertEquals(str(tasks.priority), response.data['priority'])
 

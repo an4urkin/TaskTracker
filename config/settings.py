@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 from celery.schedules import crontab
-import os
-import apis.tasks
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -94,8 +92,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'tasksdb',
+        'USER': 'admin',
+        'PASSWORD': 'adminadmin',
+        'HOST': 'db', # for local ->'localhost' || for docker -> 'db'
+        'PORT': '5432',
     }
 }
 
@@ -142,17 +144,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Celery settings
 
-#for local ->'amqp://guest:guest@localhost:5672/%2F' || for docker -> 'amqp://guest:guest@rabbitmq:5672'
+# for local ->'amqp://guest:guest@localhost:5672/%2F' || for docker -> 'amqp://guest:guest@rabbitmq:5672'
 CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq:5672/%2F' 
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = "Europe/Kiev"
-CELERY_RESULT_BACKEND = 'django-db'
+CELERY_RESULT_BACKEND = 'rpc://'
 CELERY_BEAT_SCHEDULE = {
     "delete_rejected_tasks": {
         "task": "apis.tasks.delete_rejected_tasks",
-        "schedule": crontab(minute='*/3'),
+        "schedule": crontab(minute='*/2'),
     },
 }
 
@@ -179,15 +181,7 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': 'debug.log'
-        },
-        # BROKEN - requires fix
-        # 'rabbit': {
-        #     'level': 'DEBUG',
-        #     'class': 'python_logging_rabbitmq.RabbitMQHandlerOneWay',
-        #     'host': 'localhost',
-        #     'exchange': 'logs',
-        #     'formatter': 'console'
-        # }
+        }
     },
     'loggers': {
         'django': {
