@@ -25,6 +25,7 @@ while True:
 
         channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=True)
         channel.start_consuming()
+    
     except pika.exceptions.AMQPConnectionError:
         print ('[',datetime.now(),'] Cannot connect to amqp: Connection refused.\nTrying again in 2.00 seconds...')
         # avoid rapid reconnection on longer RMQ server outage

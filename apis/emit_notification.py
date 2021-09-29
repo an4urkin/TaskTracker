@@ -3,7 +3,6 @@ from datetime import datetime
 
 
 def emit_notification(message):
-
     cred = pika.PlainCredentials('guest', 'guest')
     params = pika.ConnectionParameters(
         host='rabbitmq', # for local -> 'localhost' || for docker -> 'rabbitmq'
@@ -23,9 +22,12 @@ def emit_notification(message):
         )
         print(' [x] Sent %r' % message)
         connection.close()
+
         return(message)
+    
     except:
         print ('[',datetime.now(),'] Could not connect to amqp: Connection refused.\nMessage not sent.')
+
         return('Message not sent.')
 
         # # Loop to reconnect  

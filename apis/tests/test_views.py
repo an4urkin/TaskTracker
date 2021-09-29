@@ -8,11 +8,11 @@ from taskTracks.models import TaskTrack
 
 
 class views_test(APITestCase):
+
     def test_list_all_tasks(self):
         print("\nTesting GET for all.")
 
         tasks = TaskTrackFactory.create_batch(random.randint(1, 5))
-
         response = self.client.get(reverse('apis:tasktracks-list'))
 
         self.assertEquals(200, response.status_code)
@@ -22,7 +22,6 @@ class views_test(APITestCase):
         print("\nTesting GET for specific.")
         
         tasks = TaskTrackFactory()
-
         response = self.client.get(reverse('apis:tasktracks-detail', args=[tasks.id]))
 
         self.assertEquals(200, response.status_code)
@@ -39,7 +38,6 @@ class views_test(APITestCase):
             description='Blah blah blah',
             state='to_do',
         )
-
         payload = {
             'description': 'Blah blah blah, Updated',
             'state': 'in_pr',
@@ -64,7 +62,6 @@ class views_test(APITestCase):
             'state': 'to_do',
             'priority': '1_med',
         }
-
         response = self.client.post(reverse('apis:tasktracks-list'), payload)
         task = TaskTrack.objects.first()        
 
@@ -83,7 +80,6 @@ class views_test(APITestCase):
         print("\nTesting DELETE.")
         
         tasks = TaskTrackFactory()
-
         response = self.client.delete(reverse('apis:tasktracks-detail', args=[tasks.id]))
 
         self.assertEquals(204, response.status_code)

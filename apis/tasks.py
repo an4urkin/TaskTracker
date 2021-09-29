@@ -14,6 +14,8 @@ def delete_rejected_tasks():
     rejects = models.TaskTrack.objects.all()
     for task in rejects:
         expiration_date = task.date + timedelta(days=1)
+
         if expiration_date < timezone.now() and task.state == 'to_do':
             task.delete()
+        
     logger.info("Deleted rejected tasks at {}".format(timezone.now()))
