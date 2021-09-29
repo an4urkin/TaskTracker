@@ -28,9 +28,10 @@ def emit_notification(message):
         print ('[',datetime.now(),'] Could not connect to amqp: Connection refused.\nMessage not sent.')
         return('Message not sent.')
 
+        # # Loop to reconnect  
         # for i in range(3):
         #     if (i==2):
-        # 
+        #           ...
         #     else:
         #         print ('[',datetime.now(),'] amqp connection error.\nTrying again...')
         #         # avoid rapid reconnection on longer RMQ server outage

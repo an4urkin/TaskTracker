@@ -5,11 +5,11 @@ from rest_framework.response import Response
 
 from apis import serializers as ser
 from taskTracks.models import TaskTrack
-from apis.emit_notifiaction import emit_notification
+from apis.emit_notification import emit_notification
 
 
 class TaskTrackViewSet(viewsets.ModelViewSet):
-    
+
     def retrieve(self, request, pk):
         queryset = TaskTrack.objects.all()
         task = get_object_or_404(queryset, pk=pk)
@@ -19,7 +19,7 @@ class TaskTrackViewSet(viewsets.ModelViewSet):
     def create(self, request):
         serializer = ser.ListTaskSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            emit_notification("Task Created!")
+            emit_notification('Task Created!')
         self.perform_create(serializer)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
@@ -28,7 +28,7 @@ class TaskTrackViewSet(viewsets.ModelViewSet):
         task = get_object_or_404(queryset, pk=pk)
         serializer = ser.UpdateTaskSerializer(task, data=request.data)
         if serializer.is_valid(raise_exception=True):
-                emit_notification("Task Updated!")
+            emit_notification('Task Updated!')
         self.perform_update(serializer)
         return Response(serializer.data)
     
@@ -36,15 +36,14 @@ class TaskTrackViewSet(viewsets.ModelViewSet):
         queryset = TaskTrack.objects.all()
         task = get_object_or_404(queryset, pk=pk)
         self.perform_destroy(task)
-        emit_notification("Task Deleted!")
+        emit_notification('Task Deleted!')
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    
     queryset = TaskTrack.objects.all()
     serializer_class = ser.ListTaskSerializer
     serializer_action_classes = {
-        # 'retrieve': ser.ListTaskSerializer,
         'update': ser.UpdateTaskSerializer,
+        # 'retrieve': ser.ListTaskSerializer,
         # 'create': ser.CreateTaskSerializer
     }
     filter_backends = [filters.OrderingFilter]
