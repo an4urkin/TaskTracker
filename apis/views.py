@@ -1,11 +1,42 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets, filters
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 
 from apis import serializers as ser
-from taskTracks.models import TaskTrack
+from taskTracks.models import TaskTrack, User
 from apis.emit_notification import emit_notification
+
+
+
+class RegistrationView(APIView):
+    permission_classes = [AllowAny]
+    serializer_class = ser.RegistrationSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(
+            {
+                'token': serializer.data.get('token', None),
+            },
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class LoginView(APIView):
+    permission_classes = [AllowAny]
+    serializer_class = ser.LoginSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class TaskTrackViewSet(viewsets.ModelViewSet):

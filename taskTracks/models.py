@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.conf import settings
 from django.db import models
 from django.core import validators
-from django.contrib.auth.models import AbstractBaseUser, AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.utils.translation import ugettext_lazy as _
 
@@ -77,7 +77,7 @@ class UserManager(BaseUserManager):
         return self._create_user(username, email, password, **extra_fields)
 
 
-class User(AbstractUser, PermissionsMixin):
+class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(db_index=True, max_length=255, unique=True)
     email = models.EmailField(
         validators=[validators.validate_email],
