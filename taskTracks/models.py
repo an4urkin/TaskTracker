@@ -106,7 +106,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.username
     
     def _generate_jwt_token(self):
-        dt = timezone.now + timedelta(days=60) # May be problem with format
+        dt = timezone.now() + timedelta(days=60) # May be problem with format
         token = jwt.encode({
             'id': self.pk,
             'exp': int(dt.strftime('%s'))
