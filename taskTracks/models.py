@@ -11,7 +11,6 @@ from django.contrib.auth.models import PermissionsMixin
 from django.utils.translation import ugettext_lazy as _
 
 
-
 class TaskTrack(models.Model):
     
     class States(models.TextChoices):
@@ -86,6 +85,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         )
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    task = models.ForeignKey('TaskTrack', default=1, on_delete=models.CASCADE)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ('username',)
@@ -106,10 +106,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.username
     
     def _generate_jwt_token(self):
-        dt = timezone.now() + timedelta(days=60) # May be problem with format
+        dt = timezone.now() + timedelta(days=60) # DEBUG ONLY
         token = jwt.encode({
             'id': self.pk,
-            'exp': int(dt.strftime('%s'))
+            'exp': int(dt.strftime('%s')) 
         }, settings.SECRET_KEY, algorithm='HS256')
 
         return token.decode('utf-8')
