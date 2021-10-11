@@ -36,6 +36,7 @@ class TaskTrack(models.Model):
         choices=Priorities.choices,
         default=Priorities.MEDIUM,
     )
+    owner = models.ForeignKey('User', default=1, related_name='tasks', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -85,7 +86,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         )
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    task = models.ForeignKey('TaskTrack', default=1, on_delete=models.CASCADE)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ('username',)
@@ -109,7 +109,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         dt = timezone.now() + timedelta(days=60) # DEBUG ONLY
         token = jwt.encode({
             'id': self.pk,
-            'exp': int(dt.strftime('%s')) 
+            'exp': dt.utcfromtimestamp(dt.timestamp()) # int(dt.strftime('%S')) 
         }, settings.SECRET_KEY, algorithm='HS256')
 
         return token.decode('utf-8')

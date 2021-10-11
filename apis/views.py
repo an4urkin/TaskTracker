@@ -40,9 +40,9 @@ class LoginView(APIView):
 
 
 class TaskTrackViewSet(viewsets.ModelViewSet):
-    queryset = TaskTrack.objects.all()
+    queryset = User.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly]
-    serializer_class = ser.ListTaskSerializer
+    serializer_class = ser.ListPerUserSerializer
     serializer_action_classes = {
         'update': ser.UpdateTaskSerializer,
         # 'retrieve': ser.ListTaskSerializer,
@@ -52,9 +52,9 @@ class TaskTrackViewSet(viewsets.ModelViewSet):
     ordering_fields = ['id', 'priority', 'state', 'date']
 
     def retrieve(self, request, pk):
-        queryset = TaskTrack.objects.all()
+        queryset = User.objects.all()
         task = get_object_or_404(queryset, pk=pk)
-        serializer = ser.ListTaskSerializer(task)
+        serializer = ser.ListPerUserSerializer(task)
         username = request.user.username
         print(' [x] Author - user: %r' % username)
         

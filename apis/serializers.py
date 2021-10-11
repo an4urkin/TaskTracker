@@ -1,3 +1,4 @@
+from django.db.models import fields
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 import threading
@@ -9,6 +10,7 @@ from django.contrib.auth import authenticate
 
 
 class ListTaskSerializer(serializers.ModelSerializer):
+    # tasks = serializers.StringRelatedField(many=True)
     class Meta:
         model = TaskTrack
         fields = '__all__'
@@ -19,6 +21,12 @@ class UpdateTaskSerializer(serializers.ModelSerializer):
         model = TaskTrack
         fields = ['description', 'state']
 
+
+class ListPerUserSerializer(serializers.ModelSerializer):
+    tasks = ListTaskSerializer(many=True, read_only=True)
+    class Meta:
+        model = User
+        fields = ['username', 'is_superuser', 'tasks']
 
 class RegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
