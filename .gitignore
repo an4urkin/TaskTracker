@@ -128,5 +128,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-#PyCharm
+# PyCharm
 .idea/
+
+# local stuff
+/add_thread.py
+/emit_async_notif.py
