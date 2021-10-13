@@ -132,5 +132,5 @@ dmypy.json
 .idea/
 
 # local stuff
-/add_thread.py
-/emit_async_notif.py
+*/add_thread.py
+*/emit_async_notif.py
