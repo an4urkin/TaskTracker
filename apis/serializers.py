@@ -1,9 +1,4 @@
-from django.db.models import fields
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
-import threading
-import pika
-import os
 
 from taskTracks.models import TaskTrack, User
 from django.contrib.auth import authenticate
@@ -23,6 +18,7 @@ class UpdateTaskSerializer(serializers.ModelSerializer):
 
 
 class ListPerUserSerializer(serializers.ModelSerializer):
+    # Nesting ListTask serializer
     tasks = ListTaskSerializer(many=True, read_only=True)
     class Meta:
         model = User
