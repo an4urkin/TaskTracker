@@ -81,8 +81,8 @@ class TaskTrackViewSet(viewsets.ModelViewSet):
                 emit_notification('Task Created!')
         
             self.perform_create(serializer)
-            username = request.user.username
-            print(' [x] Author - user: %r' % username)
+            # username = request.user.username
+            # print(' [x] Author - user: %r' % username)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         else:
@@ -97,8 +97,6 @@ class TaskTrackViewSet(viewsets.ModelViewSet):
             emit_notification('Task Updated!')
         
         self.perform_update(serializer)
-        username = request.user.username
-        print(' [x] Author - user: %r' % username)
         
         return Response(serializer.data)
     
@@ -108,8 +106,6 @@ class TaskTrackViewSet(viewsets.ModelViewSet):
             task = get_object_or_404(queryset, pk=pk)
             self.perform_destroy(task)
             emit_notification('Task Deleted!')
-            username = request.user.username
-            print(' [x] Author - user: %r' % username)
         
             return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -117,10 +113,10 @@ class TaskTrackViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
-    def get_serializer_class(self):
-        try:
-            return self.serializer_action_classes[self.action]
+    # def get_serializer_class(self):
+    #     try:
+    #         return self.serializer_action_classes[self.action]
         
-        except (KeyError, AttributeError):
-            return super().get_serializer_class()
+    #     except (KeyError, AttributeError):
+    #         return super().get_serializer_class()
     
