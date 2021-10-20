@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, viewsets, filters
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
@@ -38,66 +39,59 @@ class LoginView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class UserView(APIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = ser.ListPerUserSerializer
-
-    def get(self, request):
-        user = User.objects.all()
-        serializer = self.serializer_class(user, many=True)
-        
-        return Response(serializer.data)
-    
-    def put(self, request, pk):
-        queryset = TaskTrack.objects.all()
-        task = get_object_or_404(queryset, pk=pk)
-        serializer = ser.UpdateTaskSerializer(task, data=request.data)
-
-        if serializer.is_valid(raise_exception=True):
-            emit_notification('Task Updated!')
-        
-        self.perform_update(serializer)
-        username = request.user.username
-        print(' [x] Author - user: %r' % username)
-
-
 class TaskTrackViewSet(viewsets.ModelViewSet):
-    queryset = TaskTrack.objects.all()
-    permission_classes = [IsAuthenticated, IsAdminUser]
-    serializer_class = ser.ListTaskSerializer
-    serializer_action_classes = {
-        'update': ser.UpdateTaskSerializer,
-        # 'retrieve': ser.ListTaskSerializer,
-        # 'create': ser.CreateTaskSerializer
-    }
-    filter_backends = [filters.OrderingFilter]
-    ordering_fields = ['id', 'priority', 'state', 'date']
 
-    def retrieve(self, request, pk):
-        queryset = TaskTrack.objects.all()
-        task = get_object_or_404(queryset, pk=pk)
-        serializer = ser.ListTaskSerializer(task)
-        username = request.user.username
-        print(' [x] Author - user: %r' % username)
+    # Custom filter to show only user-owned tasks
+    class IsOwnerFilterBackend(filters.BaseFilterBackend):
+        """
+        Filter that only allows users to see their own objects.
+        """
+        def filter_queryset(self, request, queryset, view):
+            if request.user.is_staff == True:
+                print("True, gotcha")
+                return queryset
+            else:
+                return queryset.filter(owner=request.user)
+
+    
+    queryset = TaskTrack.objects.all()
+    filter_backends = (IsOwnerFilterBackend, filters.OrderingFilter)
+    ordering_fields = ['id', 'priority', 'state', 'date']
+    permission_classes = [IsAuthenticated]
+    serializer_class = ser.ListTaskSerializer
+
+    # serializer_action_classes = {
+    #     'update': ser.UpdateTaskSerializer,
+    # }
+
+    # def retrieve(self, request, pk):
+    #     queryset = TaskTrack.objects.all()
+    #     task = get_object_or_404(queryset, pk=pk)
+    #     serializer = ser.ListTaskSerializer(task)
+    #     username = request.user.username
+    #     print(' [x] Author - user: %r' % username)
         
-        return Response(serializer.data)
+    #     return Response(serializer.data)
     
     def create(self, request):
-        serializer = ser.ListTaskSerializer(data=request.data)
+        if request.user.is_staff == True:
+            serializer = self.serializer_class(data=request.data) # ser.ListTaskSerializer(data=request.data)
 
-        if serializer.is_valid(raise_exception=True):
-            emit_notification('Task Created!')
+            if serializer.is_valid(raise_exception=True):
+                emit_notification('Task Created!')
         
-        self.perform_create(serializer)
-        username = request.user.username
-        print(' [x] Author - user: %r' % username)
+            self.perform_create(serializer)
+            username = request.user.username
+            print(' [x] Author - user: %r' % username)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
     
     def update(self, request, pk):
         queryset = TaskTrack.objects.all()
         task = get_object_or_404(queryset, pk=pk)
-        serializer = ser.UpdateTaskSerializer(task, data=request.data)
+        serializer = self.serializer_class(task, data=request.data) # ser.ListTaskSerializer(task, data=request.data)
 
         if serializer.is_valid(raise_exception=True):
             emit_notification('Task Updated!')
@@ -109,14 +103,19 @@ class TaskTrackViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
     
     def destroy(self, request, pk):
-        queryset = TaskTrack.objects.all()
-        task = get_object_or_404(queryset, pk=pk)
-        self.perform_destroy(task)
-        emit_notification('Task Deleted!')
-        username = request.user.username
-        print(' [x] Author - user: %r' % username)
+        if request.user.is_staff == True:            
+            queryset = TaskTrack.objects.all()
+            task = get_object_or_404(queryset, pk=pk)
+            self.perform_destroy(task)
+            emit_notification('Task Deleted!')
+            username = request.user.username
+            print(' [x] Author - user: %r' % username)
         
-        return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        else:  
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
 
     def get_serializer_class(self):
         try:
