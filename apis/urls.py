@@ -10,7 +10,7 @@ router.register('', views.TaskTrackViewSet, basename='tasktracks')
 urlpatterns = [
     re_path(r'^register/?$', views.RegistrationView.as_view(), name='user_registration'),
     re_path(r'^login/?$', views.LoginView.as_view(), name='user_login'),
-    re_path(r'^tasklist/?$', views.UserView.as_view(), name='user_tasklist'),
+    # re_path(r'^tasklist/?$', views.UserView.as_view(), name='user_tasklist'),
     path('', include(router.urls)),
 ]
 # urlpatterns = router.urls
