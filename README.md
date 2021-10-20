@@ -1,32 +1,33 @@
-## TaskTracker is a task management web app with JWT-based authenitification, written with Django REST
+# TaskTracker is a task management web app with JWT-based authentification, written with Django REST
 
 ![This is an image](https://github.com/an4urkin/TaskTracker/blob/master/my_project_visualized_all.png)
 
 - Allows to register a new user and login with user credentials.
-- User authentification is required for any actions with the tasks.
-- Task can be defined by admin user with name, description, creation date, state, priority and owner.
+- User authentification is required to acess the tasks.
+- Users can access only the tasks assigned to them, admin-users can acess all the tasks.
+- Task can be created by admin-users with name, description, creation date, state, priority and owner.
 - Task description can be updated.
 - Task state can be user-changed with any of (TODO, IN PROGRESS, READY).
 - Setting task state COMPLETED is restricted for admin-only.
 - Task is automatically rejected (deleted) if it's not started in configurable amount of time.
 - Tasks can be sorted by all applicable fields (id, priority, state, date).
 
-### Requirements
+## Requirements
 
 - PostgreSQL 13
 - Python 3.9.6
 - Django 3.2.6 
 - RabbitMQ Server 3.9.3 and other dependencies from the `requirements.txt`
 
-### Install&Run
-## Docker
+## Install&Run
+### Docker
 - [Install](https://docs.docker.com/get-docker/) and start Docker service on your system
-- Create Docker container:
+- Create and run Docker container:
 ```
 docker-compose up -d --build
 ```
 
-## Local
+### Local
 
 - Clone repo
 - Start RabbitMQ service
@@ -77,11 +78,11 @@ celery -A apis beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseSc
 ```
 python3 recieve_notification.py
 ```
-### Access the app
+## Access the app
 
 You can use Postman or access Browsable API via http://127.0.0.1:8000/apis/v1/tasks/
 
-### Run tests
+## Run tests
 
 - Launch virtual environment:
 ```
