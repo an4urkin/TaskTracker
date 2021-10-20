@@ -5,24 +5,27 @@ from django.contrib.auth import authenticate
 
 
 class ListTaskSerializer(serializers.ModelSerializer):
-    # tasks = serializers.StringRelatedField(many=True)
     class Meta:
         model = TaskTrack
         fields = '__all__'
 
 
-class UpdateTaskSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TaskTrack
-        fields = ['description', 'state']
+# Obsolete - to be removed 
+
+# class UpdateTaskSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = TaskTrack
+#         fields = ['description', 'state']
 
 
 class ListPerUserSerializer(serializers.ModelSerializer):
+
     # Nesting ListTask serializer
     tasks = ListTaskSerializer(many=True, read_only=True)
     class Meta:
         model = User
         fields = ['username', 'is_superuser', 'tasks']
+
 
 class RegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
@@ -77,24 +80,3 @@ class LoginSerializer(serializers.Serializer):
         return {
             'token': user.token,
         }
-
-"""Obsolete - will be removed later"""
-# class CreateTaskSerializer(serializers.ModelSerializer):
-#     name = serializers.CharField(required=True)
-#     description = serializers.CharField(required=True)
-#     # date = serializers.DateTimeField()
-#     state = serializers.ChoiceField(choices=models.TaskTrack.States, required=True)
-#     priority = serializers.ChoiceField(choices=models.TaskTrack.Priorities, required=True)
-
-#     class Meta:
-#         model = models.TaskTrack
-#         fields = '__all__'
-#         read_only_fields = ['id']
-
-#     def is_valid(self, raise_exception=False):
-#         valid = super(CreateTaskSerializer, self).is_valid()
-#         if valid:
-#             # emit_notification("Task created!")
-#             return True
-#         else:
-#             return False
