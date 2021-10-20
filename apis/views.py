@@ -43,12 +43,9 @@ class TaskTrackViewSet(viewsets.ModelViewSet):
 
     # Custom filter to show only user-owned tasks
     class IsOwnerFilterBackend(filters.BaseFilterBackend):
-        """
-        Filter that only allows users to see their own objects.
-        """
+
         def filter_queryset(self, request, queryset, view):
             if request.user.is_staff == True:
-                print("True, gotcha")
                 return queryset
             else:
                 return queryset.filter(owner=request.user)
@@ -59,10 +56,16 @@ class TaskTrackViewSet(viewsets.ModelViewSet):
     ordering_fields = ['id', 'priority', 'state', 'date']
     permission_classes = [IsAuthenticated]
     serializer_class = ser.ListTaskSerializer
-
     # serializer_action_classes = {
     #     'update': ser.UpdateTaskSerializer,
     # }
+
+    # def get_serializer_class(self):
+    #     try:
+    #         return self.serializer_action_classes[self.action]
+        
+    #     except (KeyError, AttributeError):
+    #         return super().get_serializer_class()
 
     # def retrieve(self, request, pk):
     #     queryset = TaskTrack.objects.all()
@@ -81,8 +84,7 @@ class TaskTrackViewSet(viewsets.ModelViewSet):
                 emit_notification('Task Created!')
         
             self.perform_create(serializer)
-            # username = request.user.username
-            # print(' [x] Author - user: %r' % username)
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         else:
@@ -93,12 +95,16 @@ class TaskTrackViewSet(viewsets.ModelViewSet):
         task = get_object_or_404(queryset, pk=pk)
         serializer = self.serializer_class(task, data=request.data) # ser.ListTaskSerializer(task, data=request.data)
 
-        if serializer.is_valid(raise_exception=True):
-            emit_notification('Task Updated!')
+        if request.user.is_staff == False and request.data.get("state") == "complt":
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            
+        else:
+            if serializer.is_valid(raise_exception=True):
+                emit_notification('Task Updated!')
         
-        self.perform_update(serializer)
-        
-        return Response(serializer.data)
+            self.perform_update(serializer)
+
+            return Response(serializer.data)
     
     def destroy(self, request, pk):
         if request.user.is_staff == True:            
@@ -111,12 +117,4 @@ class TaskTrackViewSet(viewsets.ModelViewSet):
 
         else:  
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-
-    # def get_serializer_class(self):
-    #     try:
-    #         return self.serializer_action_classes[self.action]
-        
-    #     except (KeyError, AttributeError):
-    #         return super().get_serializer_class()
     
