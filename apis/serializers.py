@@ -17,6 +17,11 @@ class ListTaskSerializer(serializers.ModelSerializer):
 #         model = TaskTrack
 #         fields = ['description', 'state']
 
+class ListUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'is_staff']
+
 
 class ListPerUserSerializer(serializers.ModelSerializer):
 
@@ -24,7 +29,7 @@ class ListPerUserSerializer(serializers.ModelSerializer):
     tasks = ListTaskSerializer(many=True, read_only=True)
     class Meta:
         model = User
-        fields = ['username', 'is_superuser', 'tasks']
+        fields = ['id', 'username', 'email', 'is_superuser', 'is_staff', 'is_active', 'tasks']
 
 
 class RegistrationSerializer(serializers.ModelSerializer):

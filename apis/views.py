@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import status, viewsets, filters
+from rest_framework import generics, status, viewsets, filters
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -9,6 +9,16 @@ from rest_framework.views import APIView
 from apis import serializers as ser
 from taskTracks.models import TaskTrack, User
 from apis.emit_notification import emit_notification
+
+
+# Custom filter to show only user-owned tasks
+class IsStaffFilterBackend(filters.BaseFilterBackend):
+
+    def filter_queryset(self, request, queryset, view):
+        if request.user.is_staff == True:
+            return queryset
+        else:
+            return queryset.filter(owner=request.user)
 
 
 class RegistrationView(APIView):
@@ -39,20 +49,19 @@ class LoginView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+# class UserView(generics.ListAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = ser.ListPerUserSerializer
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    permission_classes = [IsAuthenticated]
+    serializer_class = ser.ListUserSerializer
+
+
 class TaskTrackViewSet(viewsets.ModelViewSet):
-
-    # Custom filter to show only user-owned tasks
-    class IsOwnerFilterBackend(filters.BaseFilterBackend):
-
-        def filter_queryset(self, request, queryset, view):
-            if request.user.is_staff == True:
-                return queryset
-            else:
-                return queryset.filter(owner=request.user)
-
-    
     queryset = TaskTrack.objects.all()
-    filter_backends = (IsOwnerFilterBackend, filters.OrderingFilter)
+    filter_backends = (IsStaffFilterBackend, filters.OrderingFilter)
     ordering_fields = ['id', 'priority', 'state', 'date']
     permission_classes = [IsAuthenticated]
     serializer_class = ser.ListTaskSerializer
