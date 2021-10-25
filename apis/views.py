@@ -49,14 +49,17 @@ class LoginView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-# class UserView(generics.ListAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = ser.ListPerUserSerializer
-
-class UserViewSet(viewsets.ModelViewSet):
+class UserListView(generics.ListAPIView):
     queryset = User.objects.all()
-    permission_classes = [IsAuthenticated]
     serializer_class = ser.ListUserSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class UserDetailView(generics.RetrieveAPIView):
+    lookup_field = 'id'
+    queryset = User.objects.all()
+    serializer_class = ser.ListPerUserSerializer
+    permission_classes = [IsAdminUser]
 
 
 class TaskTrackViewSet(viewsets.ModelViewSet):
@@ -65,6 +68,7 @@ class TaskTrackViewSet(viewsets.ModelViewSet):
     ordering_fields = ['id', 'priority', 'state', 'date']
     permission_classes = [IsAuthenticated]
     serializer_class = ser.ListTaskSerializer
+    
     # serializer_action_classes = {
     #     'update': ser.UpdateTaskSerializer,
     # }
@@ -76,15 +80,6 @@ class TaskTrackViewSet(viewsets.ModelViewSet):
     #     except (KeyError, AttributeError):
     #         return super().get_serializer_class()
 
-    # def retrieve(self, request, pk):
-    #     queryset = TaskTrack.objects.all()
-    #     task = get_object_or_404(queryset, pk=pk)
-    #     serializer = ser.ListTaskSerializer(task)
-    #     username = request.user.username
-    #     print(' [x] Author - user: %r' % username)
-        
-    #     return Response(serializer.data)
-    
     def create(self, request):
         if request.user.is_staff == True:
             serializer = self.serializer_class(data=request.data) # ser.ListTaskSerializer(data=request.data)
