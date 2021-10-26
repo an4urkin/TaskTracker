@@ -5,13 +5,13 @@ FROM python:3.9.6
 ENV PYTHONUNBUFFERED 1
 
 # create root directory for project in the container
-RUN mkdir /task_TrackP
+RUN mkdir /var/task_Track
 
 # Set the working directory to /task_Track
-WORKDIR /task_TrackP
+WORKDIR /var/task_Track
 
 # Copy the current directory contents into the container at /task_Track
-ADD . /task_TrackP/
+ADD . /var/task_Track/
 
 # Install any needed packages specified in requirements.txt
 RUN pip install -r requirements.txt

@@ -6,7 +6,7 @@ services:
     restart: always
     container_name: 'rabbitmq'
     volumes:
-      - .:/task_TrackP
+      - .:/var/task_Track
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -24,14 +24,16 @@ services:
   web:
     restart: always
     build: .
-    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-    container_name: task_TrackP
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py createsuperuser --noinput && python manage.py runserver 0.0.0.0:8000"
+    container_name: task_Track
     volumes:
-      - .:/task_TrackP
+      - .:/var/task_Track
     ports:
       - "8000:8000"
     environment:
       RABBITMQ_SERVER: rabbitmq
+    env_file:
+      - superuser-variables.env
     depends_on:
       - db
       - rabbitmq
@@ -41,7 +43,7 @@ services:
     build: .
     command: bash -c "python recieve_notification.py"
     volumes:
-      - .:/task_TrackP
+      - .:/var/task_Track
     environment:
       RABBITMQ_SERVER: rabbitmq
     depends_on:
@@ -53,7 +55,7 @@ services:
     build: .
     command: celery -A apis worker -l info
     volumes:
-      - .:/task_TrackP
+      - .:/var/task_Track
     depends_on:
       - rabbitmq
       - web
@@ -63,7 +65,7 @@ services:
     build: .
     command: celery -A apis beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
     volumes:
-      - .:/task_TrackP
+      - .:/var/task_Track
     environment:
       - POSTGRES_DB=tasksdb
       - POSTGRES_USER=admin
