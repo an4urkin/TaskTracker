@@ -10,13 +10,6 @@ class ListTaskSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# Obsolete - to be removed 
-
-# class UpdateTaskSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = TaskTrack
-#         fields = ['description', 'state']
-
 class ListUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

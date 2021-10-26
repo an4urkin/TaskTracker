@@ -11,16 +11,6 @@ from taskTracks.models import TaskTrack, User
 from apis.emit_notification import emit_notification
 
 
-# Custom filter to show only user-owned tasks
-class IsStaffFilterBackend(filters.BaseFilterBackend):
-
-    def filter_queryset(self, request, queryset, view):
-        if request.user.is_staff == True:
-            return queryset
-        else:
-            return queryset.filter(owner=request.user)
-
-
 class RegistrationView(APIView):
     permission_classes = [AllowAny]
     serializer_class = ser.RegistrationSerializer
@@ -62,23 +52,24 @@ class UserDetailView(generics.RetrieveAPIView):
     permission_classes = [IsAdminUser]
 
 
-class TaskTrackViewSet(viewsets.ModelViewSet):
+class TaskTrackViewSet(viewsets.ModelViewSet):    
+
+    # Custom filter to show only user-owned tasks
+    class _IsStaffFilterBackend(filters.BaseFilterBackend):
+
+        def filter_queryset(self, request, queryset, view):
+            if request.user.is_staff == True:
+                return queryset
+            else:
+                return queryset.filter(owner=request.user)
+
+    
     queryset = TaskTrack.objects.all()
-    filter_backends = (IsStaffFilterBackend, filters.OrderingFilter)
+    filter_backends = (_IsStaffFilterBackend, filters.OrderingFilter)
     ordering_fields = ['id', 'priority', 'state', 'date']
     permission_classes = [IsAuthenticated]
     serializer_class = ser.ListTaskSerializer
-    
-    # serializer_action_classes = {
-    #     'update': ser.UpdateTaskSerializer,
-    # }
 
-    # def get_serializer_class(self):
-    #     try:
-    #         return self.serializer_action_classes[self.action]
-        
-    #     except (KeyError, AttributeError):
-    #         return super().get_serializer_class()
 
     def create(self, request):
         if request.user.is_staff == True:
