@@ -10,10 +10,16 @@ class ListTaskSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class UpdateTaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TaskTrack
+        fields = ['description', 'state']
+
+
 class ListUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username', 'email', 'is_staff']
+        fields = ['id', 'username', 'email', 'is_staff']
 
 
 class ListPerUserSerializer(serializers.ModelSerializer):

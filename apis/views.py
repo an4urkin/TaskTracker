@@ -86,13 +86,22 @@ class TaskTrackViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
     
     def update(self, request, pk):
-        queryset = TaskTrack.objects.all()
+        # queryset = TaskTrack.objects.all()
+        queryset = self.get_queryset().filter(owner=request.user)
         task = get_object_or_404(queryset, pk=pk)
-        serializer = self.serializer_class(task, data=request.data) # ser.ListTaskSerializer(task, data=request.data)
+        serializer = ser.UpdateTaskSerializer(task, data=request.data) # self.serializer_class(task, data=request.data) 
 
-        if request.user.is_staff == False and request.data.get("state") == "complt":
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-            
+        if request.user.is_staff == False:
+            if request.data.get("state") == "complt" or request.data.get("name") or request.data.get("priority"):
+
+                return Response(status=status.HTTP_401_UNAUTHORIZED)
+            else:
+                if serializer.is_valid(raise_exception=True):
+                    emit_notification('Task Updated!')
+        
+                self.perform_update(serializer)
+
+                return Response(serializer.data)
         else:
             if serializer.is_valid(raise_exception=True):
                 emit_notification('Task Updated!')
