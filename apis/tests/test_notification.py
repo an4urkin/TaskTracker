@@ -6,7 +6,7 @@ class notification_test(unittest.TestCase):
 
     def test_Notify(self):
         print("\nTesting notifications")
-        message = 'Task Created!'
+        message = 'Message sent!'
 
         if pika.BlockingConnection():
             res = emit_notification(message)
