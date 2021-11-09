@@ -26,9 +26,9 @@ def emit_notification(message):
         return(message)
     
     except:
-        print ('[',datetime.now(),'] Could not connect to amqp: Connection refused.\nMessage not sent.')
+        print ('[',datetime.now(),'] Could not connect to amqp: Connection refused.\nNotification not sent.')
 
-        return('Message not sent.')
+        return('Notification not sent.')
 
         # # Loop to reconnect  
         # for i in range(3):
