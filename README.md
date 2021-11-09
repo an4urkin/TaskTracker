@@ -21,6 +21,8 @@
 
 ## Install&Run
 ### Docker
+
+- Clone repo
 - [Install](https://docs.docker.com/get-docker/) and start Docker service on your system
 - Create and run Docker container:
 ```
@@ -84,11 +86,7 @@ You can use Postman or access Browsable API via http://127.0.0.1:8000/apis/v1/ta
 
 ## Run tests
 
-- Launch virtual environment:
-```
-pipenv shell
-```
-- Run tests:
+- Docker - run tests in web container:
 ```
 python3 manage.py test --settings=config.settings
 ```
